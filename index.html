@@ -87,6 +87,19 @@
             }
         }
 
+        .login-container {
+            position: absolute;
+            top: 20%;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .login-container input {
+            width: 70%;
+        }
     </style>
 </head>
 <body>
@@ -126,17 +139,42 @@
         createSnowflakes();
 
         // Webhook Spammer Function
+        let isPremium = false;
+        let spamMax = 5;
+        let delayTime = 1000;
+
+        // Login function
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username === "Premiumbypass" && password === "Premiumbypass") {
+                isPremium = true;
+                spamMax = 30; // Max spam count 30
+                delayTime = 1; // 1ms delay
+                alert("Logged in as Premium! Max spam count set to 30 and delay set to 1ms.");
+                document.getElementById("loginContainer").style.display = "none"; // Hide login form
+            } else {
+                alert("Incorrect username or password!");
+            }
+        }
+
+        // Function to handle webhook spam
         async function spamWebhook() {
             const webhook = document.getElementById("webhook").value;
             const message = document.getElementById("message").value;
             let spamCount = parseInt(document.getElementById("spamCount").value) || 1;
 
+            if (isPremium) {
+                spamCount = Math.min(spamCount, spamMax); // Enforce the max spam count for premium users
+            } else {
+                spamCount = Math.min(spamCount, 5); // Enforce the max spam count for non-premium users
+            }
+
             if (!webhook || !message) {
                 alert("Please enter a webhook URL and a message.");
                 return;
             }
-
-            if (spamCount > 5) spamCount = 5; // Limit spam count to 5
 
             for (let i = 0; i < spamCount; i++) {
                 fetch(webhook, {
@@ -144,10 +182,20 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ content: message })
                 })
-                .then(response => console.log(`Message ${i+1} sent`))
+                .then(response => console.log(`Message ${i + 1} sent`))
                 .catch(error => console.error("Error:", error));
+
+                await new Promise(resolve => setTimeout(resolve, delayTime)); // Add the delay
             }
         }
     </script>
+
+    <!-- Login Form -->
+    <div class="login-container" id="loginContainer">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username"><br>
+        <input type="password" id="password" placeholder="Password"><br>
+        <button onclick="login()">Login</button>
+    </div>
 </body>
 </html>
