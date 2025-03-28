@@ -88,25 +88,25 @@
             }
         }
 
+        /* Draggable popup container */
         .login-container {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
             z-index: 10;
             display: none;
-            cursor: move; /* Makes it appear draggable */
-            width: 300px;
+            cursor: move;
         }
 
         .login-container input {
             width: 70%;
         }
 
-        /* Positioning the login button at the top left */
         .login-button {
             position: absolute;
             top: 10px;
@@ -120,18 +120,15 @@
             font-family: 'Press Start 2P', cursive;
         }
 
-        /* Modal background */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
+        .popup-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
         }
+
     </style>
 </head>
 <body>
@@ -145,6 +142,7 @@
         <textarea id="message" placeholder="Enter your message"></textarea><br>
         <input type="number" id="spamCount" placeholder="Spam Count (Max 5)" min="1" max="5"><br>
         <button onclick="spamWebhook()">Spam Webhook</button>
+        <p id="cooldownMessage" style="color: red;"></p> <!-- Cooldown message -->
     </div>
 
     <!-- Credits Text -->
@@ -177,18 +175,15 @@
         let isPremium = false;
         let spamMax = 5;
         let delayTime = 1000;
-        let lastSpamTime = 0; // To track last spam time for cooldown
+        let lastSpamTime = 0; // Timestamp to store last spam time
 
         // Login function
         function toggleLoginForm() {
             const loginForm = document.getElementById("loginContainer");
-            const overlay = document.getElementById("overlay");
             if (loginForm.style.display === "block") {
                 loginForm.style.display = "none";
-                overlay.style.display = "none";
             } else {
                 loginForm.style.display = "block";
-                overlay.style.display = "flex";
             }
         }
 
@@ -202,7 +197,6 @@
                 delayTime = 1; // 1ms delay
                 alert("Logged in as Premium! Max spam count set to 30 and delay set to 1ms.");
                 document.getElementById("loginContainer").style.display = "none"; // Hide login form
-                document.getElementById("overlay").style.display = "none"; // Hide overlay
             } else {
                 alert("Incorrect username or password!");
             }
@@ -213,6 +207,14 @@
             const webhook = document.getElementById("webhook").value;
             const message = document.getElementById("message").value;
             let spamCount = parseInt(document.getElementById("spamCount").value) || 1;
+
+            // Cooldown check (5-minute cooldown)
+            let currentTime = Date.now();
+            if (currentTime - lastSpamTime < 300000) { // 5 minutes = 300,000 milliseconds
+                let remainingTime = 300000 - (currentTime - lastSpamTime);
+                document.getElementById("cooldownMessage").innerText = `Please wait ${Math.ceil(remainingTime / 1000)} seconds before spamming again.`;
+                return;
+            }
 
             if (isPremium) {
                 spamCount = Math.min(spamCount, spamMax); // Enforce the max spam count for premium users
@@ -225,15 +227,6 @@
                 return;
             }
 
-            // Cooldown check
-            const currentTime = Date.now();
-            if (currentTime - lastSpamTime < 5000) { // 5-second cooldown
-                alert("Please wait before spamming again.");
-                return;
-            }
-
-            lastSpamTime = currentTime; // Update last spam time
-
             for (let i = 0; i < spamCount; i++) {
                 fetch(webhook, {
                     method: "POST",
@@ -245,6 +238,9 @@
 
                 await new Promise(resolve => setTimeout(resolve, delayTime)); // Add the delay
             }
+
+            lastSpamTime = Date.now(); // Update last spam time
+            document.getElementById("cooldownMessage").innerText = "Spam completed! Please wait 5 minutes before trying again.";
         }
 
         // Make the login container draggable
@@ -274,11 +270,9 @@
         });
     </script>
 
-    <!-- Overlay for the login modal -->
-    <div class="overlay" id="overlay" onclick="toggleLoginForm()"></div>
-
     <!-- Login Form -->
-    <div class="login-container" id="loginContainer">
+    <div class="login-container" id="loginContainer" style="display: none;">
+        <span class="popup-close" onclick="toggleLoginForm()">×</span>
         <h2>Login</h2>
         <input type="text" id="username" placeholder="Username"><br>
         <input type="password" id="password" placeholder="Password"><br>
