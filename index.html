@@ -88,10 +88,11 @@
             }
         }
 
+        /* Popup Login Styling */
         .login-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 10px;
@@ -99,10 +100,11 @@
             z-index: 10;
             display: none;
             cursor: move; /* Makes it appear draggable */
+            width: 300px;
         }
 
         .login-container input {
-            width: 70%;
+            width: 100%;
         }
 
         /* Positioning the login button at the top left */
@@ -118,6 +120,7 @@
             cursor: pointer;
             font-family: 'Press Start 2P', cursive;
         }
+
     </style>
 </head>
 <body>
@@ -161,8 +164,8 @@
 
         // Webhook Spammer Function
         let isPremium = false;
-        let spamMax = 5;  // Default max spam count for non-premium users
-        let delayTime = 1000;  // Default delay for non-premium users
+        let spamMax = 5;
+        let delayTime = 1000;
 
         // Login function
         function toggleLoginForm() {
@@ -180,8 +183,8 @@
 
             if (username === "Premiumbypass" && password === "Premiumbypass") {
                 isPremium = true;
-                spamMax = 30; // Max spam count 30 for premium users
-                delayTime = 1; // 1ms delay for premium users
+                spamMax = 30; // Max spam count 30
+                delayTime = 1; // 1ms delay
                 alert("Logged in as Premium! Max spam count set to 30 and delay set to 1ms.");
                 document.getElementById("loginContainer").style.display = "none"; // Hide login form
             } else {
@@ -219,7 +222,7 @@
             }
         }
 
-        // Make the login container draggable
+        // Make the login popup draggable
         const loginContainer = document.getElementById("loginContainer");
         let offsetX = 0, offsetY = 0, isMouseDown = false;
 
@@ -246,8 +249,8 @@
         });
     </script>
 
-    <!-- Login Form -->
-    <div class="login-container" id="loginContainer" style="display: none;">
+    <!-- Login Form Popup -->
+    <div class="login-container" id="loginContainer">
         <h2>Login</h2>
         <input type="text" id="username" placeholder="Username"><br>
         <input type="password" id="password" placeholder="Password"><br>
