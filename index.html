@@ -98,6 +98,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
             z-index: 10;
             display: none;
+            cursor: move; /* Makes it appear draggable */
         }
 
         .login-container input {
@@ -217,6 +218,32 @@
                 await new Promise(resolve => setTimeout(resolve, delayTime)); // Add the delay
             }
         }
+
+        // Make the login container draggable
+        const loginContainer = document.getElementById("loginContainer");
+        let offsetX = 0, offsetY = 0, isMouseDown = false;
+
+        // Function to handle the drag start
+        loginContainer.addEventListener('mousedown', (e) => {
+            isMouseDown = true;
+            offsetX = e.clientX - loginContainer.offsetLeft;
+            offsetY = e.clientY - loginContainer.offsetTop;
+        });
+
+        // Function to handle the drag move
+        document.addEventListener('mousemove', (e) => {
+            if (isMouseDown) {
+                let posX = e.clientX - offsetX;
+                let posY = e.clientY - offsetY;
+                loginContainer.style.left = posX + 'px';
+                loginContainer.style.top = posY + 'px';
+            }
+        });
+
+        // Function to handle the drag stop
+        document.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
     </script>
 
     <!-- Login Form -->
