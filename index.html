@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarnellHook - GitHub Webhook Spammer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #0d1117;
+            color: white;
+        }
+        h1 {
+            color: #f78166;
+        }
+        input, textarea, button {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input, textarea {
+            background: #161b22;
+            color: white;
+        }
+        button {
+            background: #f78166;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #e05d44;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #161b22;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DarnellHook</h1>
+        <p>Spam GitHub webhooks with custom JSON payloads.</p>
+        <input type="text" id="webhook" placeholder="Enter GitHub Webhook URL"><br>
+        <textarea id="payload" placeholder='Enter JSON Payload (e.g., {"event": "push"})'></textarea><br>
+        <input type="number" id="spamCount" placeholder="Spam Count (Max 5)" min="1" max="5"><br>
+        <button onclick="spamWebhook()">Spam Webhook</button>
+    </div>
+
+    <script>
+        async function spamWebhook() {
+            const webhook = document.getElementById("webhook").value;
+            const payload = document.getElementById("payload").value;
+            let spamCount = parseInt(document.getElementById("spamCount").value) || 1;
+
+            if (!webhook || !payload) {
+                alert("Please enter a webhook URL and a valid JSON payload.");
+                return;
+            }
+
+            if (spamCount > 5) spamCount = 5; // Limit spam count to 5
+
+            try {
+                JSON.parse(payload); // Validate JSON
+            } catch (e) {
+                alert("Invalid JSON format.");
+                return;
+            }
+
+            for (let i = 0; i < spamCount; i++) {
+                fetch(webhook, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: payload
+                })
+                .then(response => console.log(`Webhook ${i+1} sent`))
+                .catch(error => console.error("Error:", error));
+            }
+        }
+    </script>
+</body>
+</html>
