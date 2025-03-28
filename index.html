@@ -161,8 +161,8 @@
 
         // Webhook Spammer Function
         let isPremium = false;
-        let spamMax = 5;
-        let delayTime = 1000;
+        let spamMax = 5;  // Default max spam count for non-premium users
+        let delayTime = 1000;  // Default delay for non-premium users
 
         // Login function
         function toggleLoginForm() {
@@ -180,8 +180,8 @@
 
             if (username === "Premiumbypass" && password === "Premiumbypass") {
                 isPremium = true;
-                spamMax = 30; // Max spam count 30
-                delayTime = 1; // 1ms delay
+                spamMax = 30; // Max spam count 30 for premium users
+                delayTime = 1; // 1ms delay for premium users
                 alert("Logged in as Premium! Max spam count set to 30 and delay set to 1ms.");
                 document.getElementById("loginContainer").style.display = "none"; // Hide login form
             } else {
