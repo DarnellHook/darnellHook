@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DarnellHook - Discord Webhook Spammer</title>
     <style>
+        /* General Styling */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 50px;
-            background-color: #2c2f33;
+            margin: 0;
+            background: linear-gradient(to right, #6a4c9c, #7289da); /* Purple to Blue gradient */
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        h1 {
             color: white;
         }
-        h1 {
-            color: #7289da;
-        }
+
         input, textarea, button {
             margin: 10px;
             padding: 10px;
@@ -24,18 +30,22 @@
             border-radius: 5px;
             font-size: 16px;
         }
+
         input, textarea {
             background: #23272a;
             color: white;
         }
+
         button {
             background: #7289da;
             color: white;
             cursor: pointer;
         }
+
         button:hover {
             background: #5b6eae;
         }
+
         .container {
             max-width: 500px;
             margin: auto;
@@ -43,7 +53,39 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
         }
+
+        p {
+            font-size: 14px;
+        }
+
+        .credits {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: #ffffff;
+            z-index: 2;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: #ffffff;
+            font-size: 1.5em;
+            user-select: none;
+            pointer-events: none;
+            animation: fall 10s linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -56,7 +98,33 @@
         <button onclick="spamWebhook()">Spam Webhook</button>
     </div>
 
+    <!-- Credits Text -->
+    <div class="credits">
+        <p>Credits to <strong>TrimX</strong> for the inspiration and assistance!</p>
+    </div>
+
+    <!-- Snowfall Effect -->
     <script>
+        // Snowfall Effect Function
+        function createSnowflakes() {
+            let numberOfSnowflakes = 50;
+            let snowflakesContainer = document.body;
+
+            for (let i = 0; i < numberOfSnowflakes; i++) {
+                let snowflake = document.createElement("span");
+                snowflake.classList.add("snowflake");
+                snowflake.textContent = "❄"; // Snowflake character
+                snowflake.style.left = Math.random() * 100 + "vw"; // Random horizontal position
+                snowflake.style.animationDuration = Math.random() * 5 + 5 + "s"; // Random speed
+                snowflake.style.animationDelay = Math.random() * 5 + "s"; // Random delay
+
+                snowflakesContainer.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes();
+
+        // Webhook Spammer Function
         async function spamWebhook() {
             const webhook = document.getElementById("webhook").value;
             const message = document.getElementById("message").value;
