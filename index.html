@@ -14,20 +14,25 @@
             color: white;
             height: 100vh;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             position: relative;
         }
 
         h1 {
             color: white;
+            font-size: 2.5em;
         }
 
         input, textarea, button {
             margin: 10px;
-            padding: 10px;
+            padding: 12px;
             width: 80%;
-            max-width: 400px;
+            max-width: 500px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
         }
 
@@ -37,28 +42,24 @@
         }
 
         button {
-            background: #7289da;
+            background: linear-gradient(to right, #8b6bf5, #6a4cf7); /* Blue-Purple gradient */
             color: white;
             cursor: pointer;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background: #5b6eae;
+            background: linear-gradient(to right, #6a4cf7, #8b6bf5); /* Hover effect */
         }
 
         .container {
-            max-width: 500px;
-            margin: auto;
-            background: #1e2124;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            position: relative;
+            background: rgba(30, 33, 36, 0.8);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
             z-index: 1;
-        }
-
-        p {
-            font-size: 14px;
         }
 
         .credits {
@@ -107,7 +108,7 @@
     <script>
         // Snowfall Effect Function
         function createSnowflakes() {
-            let numberOfSnowflakes = 50;
+            let numberOfSnowflakes = 100; // Increase for more snowflakes
             let snowflakesContainer = document.body;
 
             for (let i = 0; i < numberOfSnowflakes; i++) {
@@ -150,3 +151,4 @@
     </script>
 </body>
 </html>
+
